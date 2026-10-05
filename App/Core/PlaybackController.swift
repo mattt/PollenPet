@@ -1,23 +1,5 @@
-import Foundation
+import AVFoundation
 import Observation
-
-@MainActor protocol PlaybackClock: AnyObject {
-    var now: TimeInterval { get }
-}
-
-@MainActor final class SystemPlaybackClock: PlaybackClock {
-    var now: TimeInterval { ProcessInfo.processInfo.systemUptime }
-}
-
-@MainActor protocol AudioOutput: AnyObject {
-    var elapsed: TimeInterval? { get }
-    var isMuted: Bool { get set }
-    /// Schedules mono samples at `VoiceRenderer.sampleRate`.
-    func prepare(samples: [Float]) throws
-    func play() throws
-    func pause()
-    func stop()
-}
 
 enum PlaybackState: Sendable {
     case idle, preparing, playing, paused, finished
@@ -33,7 +15,6 @@ enum PlaybackState: Sendable {
             if reachedReplyTime != (elapsed >= replyTime) { reachedReplyTime.toggle() }
         }
     }
-    /// Whether speech has reached the performance's reply cue.
     private(set) var reachedReplyTime = false
     private(set) var state: PlaybackState = .idle
     private(set) var audioUnavailable = false
@@ -59,6 +40,16 @@ enum PlaybackState: Sendable {
         self.audio = audio
         self.clock = clock
         self.automaticTick = automaticTick
+    }
+
+    /// The speech clock at this moment. Display-synchronized drawing reads it
+    /// between ticks; it never runs behind `elapsed`.
+    var presentationTime: Double {
+        guard state == .playing, let performance else { return elapsed }
+        let fallback = anchorElapsed + max(0, clock.now - anchor)
+        let audioTime = audioUnavailable ? nil : audio.elapsed
+        // Some routes take a render cycle to provide sample time. Never rewind the reveal.
+        return min(performance.duration, max(elapsed, audioTime ?? fallback))
     }
 
     func start(_ performance: Performance, instant: Bool = false) async {
@@ -105,16 +96,6 @@ enum PlaybackState: Sendable {
         }
     }
 
-    /// The speech clock at this moment. Display-synchronized drawing reads it
-    /// between ticks; it never runs behind `elapsed`.
-    var presentationTime: Double {
-        guard state == .playing, let performance else { return elapsed }
-        let fallback = anchorElapsed + max(0, clock.now - anchor)
-        let audioTime = audioUnavailable ? nil : audio.elapsed
-        // Some routes take a render cycle to provide sample time. Never rewind the reveal.
-        return min(performance.duration, max(elapsed, audioTime ?? fallback))
-    }
-
     func tick() {
         guard state == .playing, let performance else { return }
         elapsed = presentationTime
@@ -145,6 +126,11 @@ enum PlaybackState: Sendable {
         pausePlayback()
     }
 
+    func resume() {
+        suspended = false
+        resumePlayback()
+    }
+
     /// Preparation can run while RealityKit loads, but speech must wait for a visible character.
     func setPresentationReady(_ ready: Bool) {
         presentationReady = ready
@@ -162,11 +148,6 @@ enum PlaybackState: Sendable {
         ticker?.cancel()
         ticker = nil
         state = .paused
-    }
-
-    func resume() {
-        suspended = false
-        resumePlayback()
     }
 
     private func resumePlayback() {
@@ -212,4 +193,81 @@ enum PlaybackState: Sendable {
         ticker = nil
         audio.stop()
     }
+}
+
+// MARK: - Clock
+
+@MainActor protocol PlaybackClock: AnyObject {
+    var now: TimeInterval { get }
+}
+
+@MainActor final class SystemPlaybackClock: PlaybackClock {
+    var now: TimeInterval { ProcessInfo.processInfo.systemUptime }
+}
+
+// MARK: - Audio Output
+
+@MainActor protocol AudioOutput: AnyObject {
+    var elapsed: TimeInterval? { get }
+    var isMuted: Bool { get set }
+    /// Schedules mono samples at `VoiceRenderer.sampleRate`.
+    func prepare(samples: [Float]) throws
+    func play() throws
+    func pause()
+    func stop()
+}
+
+@MainActor final class EngineAudioOutput: AudioOutput {
+    private static let volume: Float = 0.28
+
+    private let engine = AVAudioEngine()
+    private let player = AVAudioPlayerNode()
+
+    var isMuted = false {
+        didSet { player.volume = isMuted ? 0 : Self.volume }
+    }
+
+    init() {
+        engine.attach(player)
+        let format = AVAudioFormat(standardFormatWithSampleRate: VoiceRenderer.sampleRate, channels: 1)!
+        engine.connect(player, to: engine.mainMixerNode, format: format)
+        player.volume = Self.volume
+    }
+
+    var elapsed: TimeInterval? {
+        guard engine.isRunning, player.isPlaying,
+              let renderTime = player.lastRenderTime,
+              let time = player.playerTime(forNodeTime: renderTime), time.sampleRate > 0 else { return nil }
+        return max(0, Double(time.sampleTime) / time.sampleRate - player.outputPresentationLatency)
+    }
+
+    func prepare(samples: [Float]) throws {
+        player.stop()
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: VoiceRenderer.sampleRate, channels: 1),
+              let pcm = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(samples.count)),
+              let destination = pcm.floatChannelData?[0] else { throw AudioError.bufferAllocation }
+        pcm.frameLength = pcm.frameCapacity
+        samples.withUnsafeBufferPointer { source in
+            if let base = source.baseAddress { destination.update(from: base, count: source.count) }
+        }
+        if !engine.isRunning {
+            engine.prepare()
+            try engine.start()
+        }
+        player.scheduleBuffer(pcm)
+    }
+
+    func play() throws {
+        if !engine.isRunning { try engine.start() }
+        player.play()
+    }
+
+    func pause() { player.pause() }
+
+    func stop() {
+        player.stop()
+        engine.pause()
+    }
+
+    private enum AudioError: Error { case bufferAllocation }
 }

@@ -89,6 +89,8 @@ enum GestureLibrary {
     }
 }
 
+// MARK: - Head Acting
+
 /// Plays a performance's gestures on one head, then eases back to rest after speech finishes.
 struct HeadActing {
     private let pet: PetID
@@ -143,7 +145,7 @@ struct HeadActing {
     }
 }
 
-func smoothstep(_ value: Double) -> Double {
+private func smoothstep(_ value: Double) -> Double {
     let t = min(1, max(0, value))
     return t * t * (3 - 2 * t)
 }

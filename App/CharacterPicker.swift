@@ -1,7 +1,6 @@
 import AppKit
 import SwiftUI
 
-/// Shared by the companion's name badge and Settings.
 struct CharacterPicker: View {
     @Bindable var conversation: Conversation
     @Environment(\.dismiss) private var dismiss
@@ -95,7 +94,6 @@ struct CharacterPicker: View {
 }
 
 private struct CharacterPortrait: View {
-    /// Pollen Robotics' artwork for each robot, loaded once from the bundle.
     private static let images: [PetID: NSImage] = Dictionary(uniqueKeysWithValues: PetID.allCases.compactMap { pet in
         Bundle.main.url(forResource: pet.rawValue, withExtension: "png", subdirectory: "Portraits")
             .flatMap(NSImage.init(contentsOf:)).map { (pet, $0) }

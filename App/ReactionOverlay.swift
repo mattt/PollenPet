@@ -1,5 +1,5 @@
-import SwiftUI
 import RealityKit
+import SwiftUI
 
 /// Decorative, authored reactions drawn beside the projected head. The speech clock
 /// drives every value; this view owns no timers, random state, or delayed tasks.
@@ -72,6 +72,8 @@ struct ReactionOverlay: View {
     }
 }
 
+// MARK: - Hosting View
+
 /// Draws reactions above the stage and lets mouse events reach the ARView beneath.
 final class ReactionHostingView: NSHostingView<ReactionOverlay> {
     func projectedAnchor(_ position: SIMD3<Float>, in sceneView: ARView) -> CGPoint? {
@@ -80,7 +82,6 @@ final class ReactionHostingView: NSHostingView<ReactionOverlay> {
         return convert(point, from: sceneView)
     }
 
-    /// The screen rectangle that encloses every corner of a world-space box.
     func projectedRect(_ bounds: BoundingBox, in sceneView: ARView) -> CGRect? {
         var points: [CGPoint] = []
         for x in [bounds.min.x, bounds.max.x] {

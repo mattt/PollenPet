@@ -15,7 +15,6 @@ struct ReplyMenu: View {
     @FocusState private var focusedOption: Int?
     @AccessibilityFocusState private var accessibleOption: Int?
     @Environment(\.reducePetMotion) private var reducedMotion
-    private var ink: Color { AppTheme.ink }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -28,13 +27,13 @@ struct ReplyMenu: View {
                         Text(option.text).font(AppTypography.interface(16))
                             .multilineTextAlignment(.leading)
                     }
-                    .foregroundStyle(ink)
+                    .foregroundStyle(AppTheme.ink)
                     .padding(12).frame(maxWidth: .infinity, alignment: .leading)
                     .background(selection == option.id ? AppTheme.yellow.opacity(0.35) : .clear,
                                 in: RoundedRectangle(cornerRadius: 10))
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
-                            .strokeBorder(selection == option.id ? ink : .clear, lineWidth: 2)
+                            .strokeBorder(selection == option.id ? AppTheme.ink : .clear, lineWidth: 2)
                     }
                 }
                 .buttonStyle(QuietButtonStyle())

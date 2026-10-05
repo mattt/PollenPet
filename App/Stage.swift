@@ -7,19 +7,21 @@ import simd
     /// The stage's size in the companion window, in points.
     static let viewportSize = CGSize(width: 728, height: 438)
 
+    private static let restingYaw: Float = -0.13
+    private static let fieldOfView: Float = 35
+
     let scene = AnchorEntity(world: .zero)
     let character = Entity()
     let environment: EnvironmentResource
     private let camera = PerspectiveCamera()
-    private var microduckMaterials: MicroduckMaterials?
     private let animator: any CharacterAnimator
+    private var microduckMaterials: MicroduckMaterials?
+    private var framingCorners: [SIMD3<Float>] = []
+    private var cameraAspect: Float = 0
     private var cursorPosition = SIMD2<Float>.zero
     private var cursorAngles = SIMD2<Float>.zero
     private var bodyYaw: Float = 0
     private var lastMotionTime: Double?
-    private let restingYaw: Float = -0.13
-    private var framingCorners: [SIMD3<Float>] = []
-    private var cameraAspect: Float = 0
 
     init(pet: PetID) async throws {
         guard let folder = Bundle.main.url(forResource: pet.rawValue, withExtension: nil, subdirectory: "Models") else {
@@ -44,7 +46,7 @@ import simd
         let center = (low + high) / 2
         let base = SIMD3(center.x, low.y, center.z)
         let scale = 1.95 / (high.y - low.y)
-        character.orientation = simd_quatf(angle: restingYaw, axis: [0, 1, 0])
+        character.orientation = simd_quatf(angle: Self.restingYaw, axis: [0, 1, 0])
         for x in [low.x, high.x] {
             for y in [low.y, high.y] {
                 for z in [low.z, high.z] {
@@ -77,10 +79,32 @@ import simd
         cursorPosition = position ?? .zero
     }
 
+    func setViewportSize(_ size: CGSize) {
+        guard size.width > 0, size.height > 0 else { return }
+        let aspect = Float(size.width / size.height)
+        guard abs(aspect - cameraAspect) > 0.001 else { return }
+        cameraAspect = aspect
+        let target = SIMD3<Float>(0, 1.1, 0)
+        let baseline = SIMD3<Float>(0, 2.0, 3.7)
+        let forward = simd_normalize(target - baseline)
+        let right = SIMD3<Float>(1, 0, 0)
+        let up = simd_cross(right, forward)
+        let vertical = tan(Float.pi * Self.fieldOfView / 360) * 0.9
+        var distance = simd_distance(target, baseline)
+        // Fit the full model bounds in 90% of the viewport, which leaves headroom for reactions.
+        for corner in framingCorners {
+            let relative = corner - target
+            let depth = simd_dot(relative, forward)
+            distance = max(distance, abs(simd_dot(relative, right)) / (vertical * aspect) - depth)
+            distance = max(distance, abs(simd_dot(relative, up)) / vertical - depth)
+        }
+        camera.look(at: target, from: target - forward * distance, relativeTo: nil)
+    }
+
     func update(_ performance: Performance, id: UUID, time: Double, motionTime: Double,
                 state: PlaybackState, reducedMotion: Bool) {
         updateCursorAttention(at: motionTime, reducedMotion: reducedMotion)
-        character.orientation = simd_quatf(angle: restingYaw + bodyYaw, axis: [0, 1, 0])
+        character.orientation = simd_quatf(angle: Self.restingYaw + bodyYaw, axis: [0, 1, 0])
         let attention = SIMD3<Double>(-Double(cursorAngles.y), Double(cursorAngles.x), 0)
         animator.update(performance, id: id, time: time, idleTime: motionTime,
                         state: state, reducedMotion: reducedMotion, attention: attention)
@@ -107,33 +131,10 @@ import simd
         bodyYaw += (bodyTarget - bodyYaw) * bodyBlend
     }
 
-    func setViewportSize(_ size: CGSize) {
-        guard size.width > 0, size.height > 0 else { return }
-        let aspect = Float(size.width / size.height)
-        guard abs(aspect - cameraAspect) > 0.001 else { return }
-        cameraAspect = aspect
-        let target = SIMD3<Float>(0, 1.1, 0)
-        let baseline = SIMD3<Float>(0, 2.0, 3.7)
-        let forward = simd_normalize(target - baseline)
-        let right = SIMD3<Float>(1, 0, 0)
-        let up = simd_cross(right, forward)
-        let vertical = tan(Float.pi * 35 / 360) * 0.9
-        var distance = simd_distance(target, baseline)
-        // Fit the full model bounds in the available viewport.
-        for corner in framingCorners {
-            let relative = corner - target
-            let depth = simd_dot(relative, forward)
-            distance = max(distance, abs(simd_dot(relative, right)) / (vertical * aspect) - depth)
-            distance = max(distance, abs(simd_dot(relative, up)) / vertical - depth)
-        }
-        camera.look(at: target, from: target - forward * distance, relativeTo: nil)
-    }
-
     private func configureStage() {
-        camera.camera.fieldOfViewInDegrees = 35
+        camera.camera.fieldOfViewInDegrees = Self.fieldOfView
         camera.camera.near = 0.1
         camera.camera.far = 80
-        // Frame the entire character within its own compact stage, leaving headroom for reactions.
         setViewportSize(Self.viewportSize)
         scene.addChild(camera)
         StageLighting.apply(to: scene)
@@ -163,5 +164,52 @@ import simd
         for child in entity.children { addHitShapes(below: child) }
     }
 
-    enum ModelError: Error { case missingModel(PetID), invalidFraming }
+    private enum ModelError: Error { case missingModel(PetID), invalidFraming }
+}
+
+// MARK: - Lighting
+
+@MainActor private enum StageLighting {
+    // A broad sky/ground source avoids hard directional-light terminators across
+    // curved heads. Share the prefiltered environment across character switches.
+    private static var environmentTask: Task<EnvironmentResource, Error>?
+
+    static func environment() async throws -> EnvironmentResource {
+        if let environmentTask { return try await environmentTask.value }
+        let task = Task { @MainActor in
+            let width = 256, height = 128
+            var pixels = [UInt8](repeating: 255, count: width * height * 4)
+            for y in 0..<height {
+                let t = Double(y) / Double(height - 1)
+                let sky = SIMD3<Double>(0.78, 0.86, 0.98)
+                let horizon = SIMD3<Double>(0.94, 0.93, 0.87)
+                let ground = SIMD3<Double>(0.62, 0.68, 0.53)
+                let color = t < 0.5 ? sky + (horizon - sky) * (t * 2) : horizon + (ground - horizon) * ((t - 0.5) * 2)
+                for x in 0..<width {
+                    let i = (y * width + x) * 4
+                    pixels[i] = UInt8(color.x * 255)
+                    pixels[i+1] = UInt8(color.y * 255)
+                    pixels[i+2] = UInt8(color.z * 255)
+                }
+            }
+            let image = CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: width * 4,
+                space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
+                provider: CGDataProvider(data: Data(pixels) as CFData)!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)!
+            return try await EnvironmentResource(equirectangular: image)
+        }
+        environmentTask = task
+        do { return try await task.value }
+        catch { environmentTask = nil; throw error }
+    }
+
+    static func apply(to root: Entity) {
+        let sun = DirectionalLight()
+        sun.light.color = NSColor(srgbRed: 1, green: 0.95, blue: 0.85, alpha: 1)
+        // A restrained key retains form and ground shadows; the environment
+        // supplies the fill instead of a second hard light behind the character.
+        sun.light.intensity = 500
+        sun.shadow = .init()
+        sun.look(at: [0, 0, 0], from: [3, 6, 4], relativeTo: nil)
+        root.addChild(sun)
+    }
 }

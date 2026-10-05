@@ -1,11 +1,15 @@
 import SwiftUI
 
+// MARK: - Typography
+
 enum AppTypography {
     static func heading(_ size: CGFloat) -> Font { .custom("Anton-Regular", size: size) }
     static func dialogue(_ size: CGFloat) -> Font { .system(size: size, weight: .medium) }
     static func interface(_ size: CGFloat) -> Font { .system(size: size, weight: .semibold) }
     static func label(_ size: CGFloat) -> Font { .system(size: size, weight: .medium, design: .monospaced) }
 }
+
+// MARK: - Theme
 
 enum AppTheme {
     static let paper = Color(hex: 0xFFF8E8)
@@ -15,21 +19,6 @@ enum AppTheme {
     static let border: CGFloat = 2
     static let radius: CGFloat = 18
     static let shadow: CGFloat = 4
-}
-
-extension View {
-    func comicPanel(_ fill: Color = AppTheme.paper, radius: CGFloat = AppTheme.radius) -> some View {
-        background {
-            RoundedRectangle(cornerRadius: radius)
-                .fill(AppTheme.ink).offset(x: AppTheme.shadow, y: AppTheme.shadow)
-            RoundedRectangle(cornerRadius: radius).fill(fill)
-            RoundedRectangle(cornerRadius: radius).strokeBorder(AppTheme.ink, lineWidth: AppTheme.border)
-        }
-    }
-}
-
-extension EnvironmentValues {
-    @Entry var reducePetMotion = false
 }
 
 extension Color {
@@ -49,8 +38,30 @@ extension PetID {
     }
 }
 
+// MARK: - Comic Panel
+
+extension View {
+    func comicPanel(_ fill: Color = AppTheme.paper, radius: CGFloat = AppTheme.radius) -> some View {
+        background {
+            RoundedRectangle(cornerRadius: radius)
+                .fill(AppTheme.ink).offset(x: AppTheme.shadow, y: AppTheme.shadow)
+            RoundedRectangle(cornerRadius: radius).fill(fill)
+            RoundedRectangle(cornerRadius: radius).strokeBorder(AppTheme.ink, lineWidth: AppTheme.border)
+        }
+    }
+}
+
+// MARK: - Environment
+
+extension EnvironmentValues {
+    @Entry var reducePetMotion = false
+}
+
+// MARK: - Button Styles
+
 struct QuietButtonStyle: ButtonStyle {
     @Environment(\.reducePetMotion) private var reducedMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .opacity(configuration.isPressed ? 0.78 : 1)

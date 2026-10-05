@@ -4,9 +4,11 @@ struct ContentView: View {
     private static let dialogueWidth = Stage.viewportSize.width
     private static let dialoguePadding: CGFloat = 28
     private static let endReplies = ["Let's talk about something else.", "Let's start again."]
+
     @Bindable var conversation: Conversation
     let appDelegate: AppDelegate
     @Binding var characterPickerRequested: Bool
+    @Environment(MicroduckAppearanceStore.self) private var appearanceStore
     @Environment(\.accessibilityReduceMotion) private var reducedMotion
     @AppStorage("instantText") private var instantText = false
     @AppStorage("muted") private var muted = false
@@ -16,9 +18,9 @@ struct ContentView: View {
     @State private var modelError: String?
     @State private var stageSuspended = false
     @State private var motionStart = ProcessInfo.processInfo.systemUptime
+
     private var pet: PetID { conversation.pet }
     private var player: PlaybackController { conversation.playback }
-    @Environment(MicroduckAppearanceStore.self) private var appearanceStore
     private var motionReduced: Bool { reducedMotion || ProcessInfo.processInfo.arguments.contains("--reduce-motion") }
     private var speechLineWidth: CGFloat { Self.dialogueWidth - 2 * Self.dialoguePadding }
 
@@ -40,7 +42,6 @@ struct ContentView: View {
             .gesture(WindowDragGesture())
             .allowsWindowActivationEvents()
             .help("Drag the character to move the window")
-            // Keep the entire robot above the dialogue panel.
             dialogueBox
         }
         .overlay(alignment: .topTrailing) {
@@ -61,7 +62,6 @@ struct ContentView: View {
             .frame(width: 280, alignment: .trailing)
             .animation(replyAnimation, value: conversation.choicesVisible)
             .animation(replyAnimation, value: conversation.sceneFinished)
-
             // Keep replies above the dialogue text, with a small overlap at its rim.
             .alignmentGuide(.top) { dimensions in dimensions[.bottom] - 416 }
         }
@@ -82,10 +82,10 @@ struct ContentView: View {
                 return true
             }))
         .onAppear {
-            stageSuspended = false
-            conversation.instantText = instantText || ProcessInfo.processInfo.arguments.contains("--instant")
-            player.isMuted = muted
             let arguments = ProcessInfo.processInfo.arguments
+            stageSuspended = false
+            conversation.instantText = instantText || arguments.contains("--instant")
+            player.isMuted = muted
             if let argument = arguments.first(where: { $0.hasPrefix("--pet=") }),
                let selected = PetID(rawValue: String(argument.dropFirst(6))) { conversation.select(pet: selected) }
             if let argument = arguments.first(where: { $0.hasPrefix("--scene=") }),
@@ -191,34 +191,12 @@ struct ContentView: View {
             .contentShape(RoundedRectangle(cornerRadius: AppTheme.radius)).onTapGesture { conversation.advance() }
     }
 
-    private func announceLine() {
-        guard !conversation.isCharacterLoading else { return }
-        var announcement = AttributedString(conversation.line.text)
-        announcement.accessibilitySpeechAnnouncementPriority = .high
-        AccessibilityNotification.Announcement(announcement).post()
-    }
-
-    private func announceReplies(_ title: String, _ replies: [String]) {
-        let options = replies.enumerated().map { "\($0.offset + 1): \($0.element)" }
-        AccessibilityNotification.Announcement("\(title). " + options.joined(separator: " ")).post()
-    }
-
     private var replyMenu: some View {
         ReplyMenu(title: "Choose a reply", options: conversation.scene.choices.map { .init(id: $0.id, text: $0.text) }) { id in
             if let choice = conversation.scene.choices.first(where: { $0.id == id }) {
                 conversation.choose(choice)
             }
         }
-    }
-
-    private var replyTransition: AnyTransition {
-        .asymmetric(insertion: motionReduced ? .opacity :
-            .scale(scale: 0.94, anchor: .bottomTrailing).combined(with: .opacity),
-            removal: .opacity)
-    }
-
-    private var replyAnimation: Animation {
-        motionReduced ? .easeOut(duration: 0.12) : .spring(response: 0.28, dampingFraction: 0.82)
     }
 
     private var endMenu: some View {
@@ -233,7 +211,31 @@ struct ContentView: View {
             }
         }
     }
+
+    private var replyTransition: AnyTransition {
+        .asymmetric(insertion: motionReduced ? .opacity :
+            .scale(scale: 0.94, anchor: .bottomTrailing).combined(with: .opacity),
+            removal: .opacity)
+    }
+
+    private var replyAnimation: Animation {
+        motionReduced ? .easeOut(duration: 0.12) : .spring(response: 0.28, dampingFraction: 0.82)
+    }
+
+    private func announceLine() {
+        guard !conversation.isCharacterLoading else { return }
+        var announcement = AttributedString(conversation.line.text)
+        announcement.accessibilitySpeechAnnouncementPriority = .high
+        AccessibilityNotification.Announcement(announcement).post()
+    }
+
+    private func announceReplies(_ title: String, _ replies: [String]) {
+        let options = replies.enumerated().map { "\($0.offset + 1): \($0.element)" }
+        AccessibilityNotification.Announcement("\(title). " + options.joined(separator: " ")).post()
+    }
 }
+
+// MARK: - Dialogue
 
 /// Redraws only the dialogue text at the display's refresh rate while speech plays.
 private struct SpeechLine: View {
@@ -249,6 +251,7 @@ private struct SpeechLine: View {
 
 private struct DialogueAdvanceMarker: View {
     let active: Bool
+
     var body: some View {
         Image(systemName: "arrow.down")
             .font(.system(size: 19, weight: .bold))

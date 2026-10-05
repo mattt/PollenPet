@@ -1,6 +1,6 @@
 import Combine
-import SwiftUI
 import RealityKit
+import SwiftUI
 
 /// The speech state that one rendered frame of the stage shows.
 struct StageFrame {
@@ -54,17 +54,17 @@ struct StageView: NSViewRepresentable {
         coordinator.reducedMotion = reducedMotion
         coordinator.appearance = appearance
         if coordinator.requestedPet != pet { configure(view, context: context) }
-        coordinator.world?.applyAppearance(appearance)
+        coordinator.stage?.applyAppearance(appearance)
     }
 
     static func dismantleNSView(_ view: ARView, coordinator: Coordinator) {
         coordinator.sceneUpdates?.cancel()
         coordinator.sceneUpdates = nil
-        coordinator.world?.stop()
+        coordinator.stage?.stop()
         coordinator.loadTask?.cancel()
         coordinator.requestedPet = nil
         view.scene.anchors.removeAll()
-        coordinator.world = nil
+        coordinator.stage = nil
         coordinator.frame = nil
         coordinator.overlay?.removeFromSuperview()
         coordinator.overlay = nil
@@ -73,8 +73,8 @@ struct StageView: NSViewRepresentable {
     private func configure(_ view: ARView, context: Context) {
         let coordinator = context.coordinator
         coordinator.loadTask?.cancel()
-        coordinator.world?.stop()
-        coordinator.world = nil
+        coordinator.stage?.stop()
+        coordinator.stage = nil
         coordinator.requestedPet = pet
         view.scene.anchors.removeAll()
         let selectedPet = pet
@@ -82,14 +82,14 @@ struct StageView: NSViewRepresentable {
             do {
                 try Task.checkCancellation()
                 onLoading(selectedPet)
-                let world = try await Stage(pet: selectedPet)
+                let stage = try await Stage(pet: selectedPet)
                 try Task.checkCancellation()
                 guard let view, let coordinator, coordinator.requestedPet == selectedPet else { return }
-                coordinator.world = world
-                view.environment.lighting.resource = world.environment
+                coordinator.stage = stage
+                view.environment.lighting.resource = stage.environment
                 view.environment.lighting.intensityExponent = 1
-                view.scene.addAnchor(world.scene)
-                world.applyAppearance(coordinator.appearance)
+                view.scene.addAnchor(stage.scene)
+                stage.applyAppearance(coordinator.appearance)
                 coordinator.render(in: view)
                 // Asset loading completes before RealityKit's first GPU frame.
                 // Wait for actual character pixels, including with Reduce Motion on.
@@ -109,7 +109,7 @@ struct StageView: NSViewRepresentable {
     }
 
     @MainActor final class Coordinator {
-        var world: Stage?
+        var stage: Stage?
         var frame: (@MainActor () -> StageFrame)?
         var motionStart: TimeInterval = 0
         var paused = false
@@ -122,34 +122,54 @@ struct StageView: NSViewRepresentable {
         private var overlayShown = false
 
         func render(in view: ARView) {
-            guard let world, let frame else { return }
-            let stage = frame()
-            world.setViewportSize(view.bounds.size)
-            world.setCursorPosition((view as? StageARView)?.pointerPosition)
-            world.update(stage.performance, id: stage.performanceID, time: stage.time,
+            guard let stage, let frame else { return }
+            let current = frame()
+            stage.setViewportSize(view.bounds.size)
+            stage.setCursorPosition((view as? StageARView)?.pointerPosition)
+            stage.update(current.performance, id: current.performanceID, time: current.time,
                          motionTime: ProcessInfo.processInfo.systemUptime - motionStart,
-                         state: stage.state, reducedMotion: reducedMotion)
-            updateOverlay(stage, world: world, in: view)
+                         state: current.state, reducedMotion: reducedMotion)
+            updateOverlay(current, stage: stage, in: view)
         }
 
         /// The overlay is a SwiftUI hosting view. Leave it alone between reactions
         /// instead of rebuilding an empty canvas on every frame.
-        private func updateOverlay(_ stage: StageFrame, world: Stage, in view: ARView) {
+        private func updateOverlay(_ frame: StageFrame, stage: Stage, in view: ARView) {
             guard let overlay else { return }
-            let active = stage.state == .playing || stage.state == .paused
-            let reacting = active && stage.performance.reactions.contains {
-                stage.time >= $0.start && stage.time < $0.end
+            let active = frame.state == .playing || frame.state == .paused
+            let reacting = active && frame.performance.reactions.contains {
+                frame.time >= $0.start && frame.time < $0.end
             }
-            guard reacting || overlayShown, let bounds = world.headBounds,
+            guard reacting || overlayShown, let bounds = stage.headBounds,
                   let head = overlay.projectedRect(bounds, in: view) else { return }
             overlayShown = reacting
-            overlay.rootView = .init(performance: stage.performance, time: stage.time, active: reacting,
+            overlay.rootView = .init(performance: frame.performance, time: frame.time, active: reacting,
                 reducedMotion: reducedMotion, head: head, scale: min(1.3, max(0.7, view.bounds.height / 400)))
         }
     }
 }
 
+// MARK: - Native View
+
 private final class StageARView: ARView, CompanionHitRegion {
+    /// The pointer in stage coordinates from -1 to 1, or `nil` outside the stage.
+    /// It reads the screen position, because the window ignores mouse events
+    /// while the pointer is away from the robot and the dialogue.
+    var pointerPosition: SIMD2<Float>? {
+        guard let window, window.isVisible, bounds.width > 0, bounds.height > 0 else { return nil }
+        let point = convert(window.convertPoint(fromScreen: NSEvent.mouseLocation), from: nil)
+        guard bounds.contains(point) else { return nil }
+        return SIMD2(Float(point.x / bounds.width * 2 - 1), Float(point.y / bounds.height * 2 - 1))
+    }
+
+    /// Each rigid part carries a convex collision shape that follows its joint,
+    /// so a raycast matches the current pose without reading back a frame.
+    func acceptsCompanionHit(at point: NSPoint) -> Bool {
+        let local = convert(point, from: nil)
+        guard bounds.contains(local), !isHiddenOrHasHiddenAncestor else { return false }
+        return !hitTest(local, query: .any).isEmpty
+    }
+
     func waitForVisibleCharacter() async throws {
         while true {
             try Task.checkCancellation()
@@ -168,31 +188,14 @@ private final class StageARView: ARView, CompanionHitRegion {
     /// A tiny alpha thumbnail detects a rendered silhouette without reading every
     /// pixel of a Retina snapshot. The stage background itself is transparent.
     private static func containsVisiblePixels(_ image: CGImage) -> Bool {
-        var pixels = [UInt8](repeating: 0, count: 32 * 32 * 4)
+        let side = 32
+        var pixels = [UInt8](repeating: 0, count: side * side * 4)
         return pixels.withUnsafeMutableBytes { bytes in
-            guard let context = CGContext(data: bytes.baseAddress, width: 32, height: 32,
-                bitsPerComponent: 8, bytesPerRow: 32 * 4, space: CGColorSpaceCreateDeviceRGB(),
+            guard let context = CGContext(data: bytes.baseAddress, width: side, height: side,
+                bitsPerComponent: 8, bytesPerRow: side * 4, space: CGColorSpaceCreateDeviceRGB(),
                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
-            context.draw(image, in: CGRect(x: 0, y: 0, width: 32, height: 32))
+            context.draw(image, in: CGRect(x: 0, y: 0, width: side, height: side))
             return stride(from: 3, to: bytes.count, by: 4).contains { bytes[$0] > 12 }
         }
-    }
-
-    /// Each rigid part carries a convex collision shape that follows its joint,
-    /// so a raycast matches the current pose without reading back a frame.
-    func acceptsCompanionHit(at point: NSPoint) -> Bool {
-        let local = convert(point, from: nil)
-        guard bounds.contains(local), !isHiddenOrHasHiddenAncestor else { return false }
-        return !hitTest(local, query: .any).isEmpty
-    }
-
-    /// The pointer in stage coordinates from -1 to 1, or `nil` outside the stage.
-    /// It reads the screen position, because the window ignores mouse events
-    /// while the pointer is away from the robot and the dialogue.
-    var pointerPosition: SIMD2<Float>? {
-        guard let window, window.isVisible, bounds.width > 0, bounds.height > 0 else { return nil }
-        let point = convert(window.convertPoint(fromScreen: NSEvent.mouseLocation), from: nil)
-        guard bounds.contains(point) else { return nil }
-        return SIMD2(Float(point.x / bounds.width * 2 - 1), Float(point.y / bounds.height * 2 - 1))
     }
 }

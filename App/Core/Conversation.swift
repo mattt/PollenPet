@@ -1,7 +1,9 @@
-import Observation
 import Foundation
+import Observation
 
 @MainActor @Observable final class Conversation {
+    let playback: PlaybackController
+    var instantText = false
     private(set) var pet: PetID = .microduck
     private(set) var sceneID: SceneID = .hello
     private(set) var line: DialogueLine
@@ -9,8 +11,6 @@ import Foundation
     private(set) var performanceID = UUID()
     private(set) var response: [DialogueLine] = []
     private(set) var responseIndex = -1
-    let playback: PlaybackController
-    var instantText = false
     private(set) var isCharacterLoading = true
     /// Whether the companion window is open. Closing it ends the presentation.
     private(set) var isPresenting = true

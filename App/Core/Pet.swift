@@ -1,5 +1,3 @@
-import Foundation
-
 /// The robots the app can show. Each one has a bundled model, dialogue, voice, and animator.
 enum PetID: String, CaseIterable, Identifiable, Sendable {
     case microduck

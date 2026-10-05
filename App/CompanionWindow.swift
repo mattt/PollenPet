@@ -1,5 +1,33 @@
-import SwiftUI
 import AppKit
+import SwiftUI
+
+// MARK: - Hit Regions
+
+/// Regions are expressed in window coordinates so padding never becomes a hit target.
+@MainActor protocol CompanionHitRegion: AnyObject {
+    func acceptsCompanionHit(at point: NSPoint) -> Bool
+}
+
+struct CompanionShapeRegion<S: Shape>: NSViewRepresentable {
+    let shape: S
+
+    func makeNSView(context: Context) -> RegionView { RegionView() }
+    func updateNSView(_ view: RegionView, context: Context) {
+        view.containsPoint = { point, bounds in shape.path(in: bounds).contains(point) }
+    }
+
+    final class RegionView: NSView, CompanionHitRegion {
+        var containsPoint: ((CGPoint, CGRect) -> Bool)?
+        override var isFlipped: Bool { true }
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+        func acceptsCompanionHit(at point: NSPoint) -> Bool {
+            !isHiddenOrHasHiddenAncestor && (containsPoint?(convert(point, from: nil), bounds) ?? false)
+        }
+    }
+}
+
+// MARK: - Lifecycle
 
 struct WindowLifecycle: NSViewRepresentable {
     let onAttach: @MainActor (NSWindow) -> Void
@@ -32,7 +60,6 @@ struct WindowLifecycle: NSViewRepresentable {
         var onClose: (@MainActor () -> Void)?
         var onSpace: (@MainActor () -> Bool)?
         private var observers: [(NotificationCenter, NSObjectProtocol)] = []
-
         private var hitTimer: Timer?
         private var eventMonitors: [Any] = []
         private weak var observedWindow: NSWindow?
@@ -46,20 +73,6 @@ struct WindowLifecycle: NSViewRepresentable {
             observedWindow = nil
             for (center, observer) in observers { center.removeObserver(observer) }
             observers = []
-        }
-
-        private func updateMousePassthrough() {
-            guard let window, window.isVisible, !window.isMiniaturized,
-                  let content = window.contentView else { return }
-            // Keep ownership of a mouse sequence until release, especially during window drags.
-            guard NSEvent.pressedMouseButtons == 0 else { return }
-            let point = window.convertPoint(fromScreen: NSEvent.mouseLocation)
-            func acceptsHit(_ view: NSView) -> Bool {
-                if let region = view as? CompanionHitRegion,
-                   region.acceptsCompanionHit(at: point) { return true }
-                return view.subviews.contains(where: acceptsHit)
-            }
-            window.ignoresMouseEvents = !acceptsHit(content)
         }
 
         override func viewDidMoveToWindow() {
@@ -107,6 +120,20 @@ struct WindowLifecycle: NSViewRepresentable {
                 guard self?.window?.isMiniaturized == false else { return }
                 self?.onResume?()
             }
+        }
+
+        private func updateMousePassthrough() {
+            guard let window, window.isVisible, !window.isMiniaturized,
+                  let content = window.contentView else { return }
+            // Keep ownership of a mouse sequence until release, especially during window drags.
+            guard NSEvent.pressedMouseButtons == 0 else { return }
+            let point = window.convertPoint(fromScreen: NSEvent.mouseLocation)
+            func acceptsHit(_ view: NSView) -> Bool {
+                if let region = view as? CompanionHitRegion,
+                   region.acceptsCompanionHit(at: point) { return true }
+                return view.subviews.contains(where: acceptsHit)
+            }
+            window.ignoresMouseEvents = !acceptsHit(content)
         }
 
         private func observe(_ name: Notification.Name, center: NotificationCenter, object: AnyObject? = nil,

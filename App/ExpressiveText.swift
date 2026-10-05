@@ -1,16 +1,26 @@
 import AppKit
 import SwiftUI
 
-struct SpeechAttribute: TextAttribute {
-    let id: Int
-    let start: Double
-    let end: Double
-    let effect: TextEffect
+struct ExpressiveText: View {
+    let text: Text
+    let time: Double
+    let complete: Bool
+    @Environment(\.reducePetMotion) private var reducedMotion
+
+    var body: some View {
+        text
+            .font(AppTypography.dialogue(SpeechText.fontSize))
+            .lineSpacing(8)
+            .textRenderer(SpeechRenderer(time: time, reducedMotion: reducedMotion, complete: complete))
+            .fixedSize(horizontal: false, vertical: true)
+    }
 }
 
 struct SpeechText {
     static let fontSize: CGFloat = 25
+
     let text: Text
+
     init(_ performance: Performance, lineWidth: CGFloat) {
         let breakIndex = Self.sentenceBreakIndex(in: performance.units, lineWidth: lineWidth)
         // Every fragment is a whole extended grapheme cluster. All of its glyphs inherit
@@ -50,7 +60,14 @@ struct SpeechText {
     }
 }
 
-struct SpeechRenderer: TextRenderer {
+private struct SpeechAttribute: TextAttribute {
+    let id: Int
+    let start: Double
+    let end: Double
+    let effect: TextEffect
+}
+
+private struct SpeechRenderer: TextRenderer {
     let time: Double
     let reducedMotion: Bool
     let complete: Bool
@@ -80,20 +97,5 @@ struct SpeechRenderer: TextRenderer {
                 drawing.draw(run, options: .disablesSubpixelQuantization)
             }
         }
-    }
-}
-
-struct ExpressiveText: View {
-    let text: Text
-    let time: Double
-    let complete: Bool
-    @Environment(\.reducePetMotion) private var reducedMotion
-
-    var body: some View {
-        text
-            .font(AppTypography.dialogue(SpeechText.fontSize))
-            .lineSpacing(8)
-            .textRenderer(SpeechRenderer(time: time, reducedMotion: reducedMotion, complete: complete))
-            .fixedSize(horizontal: false, vertical: true)
     }
 }

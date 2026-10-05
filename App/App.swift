@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct PollenPetApp: App {
+struct App: SwiftUI.App {
     static let companionWindowID = "companion"
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
@@ -34,7 +34,9 @@ struct PollenPetApp: App {
     }
 }
 
-/// The Conversation menu. These commands also work while the companion window is closed.
+// MARK: - Commands
+
+/// These commands also work while the companion window is closed.
 private struct ConversationCommands: View {
     let conversation: Conversation
     @Binding var characterPickerRequested: Bool
@@ -48,17 +50,19 @@ private struct ConversationCommands: View {
         Button("Replay Scene") {
             // Opening the window starts the scene from the beginning.
             if conversation.isPresenting { conversation.replay() }
-            else { openWindow(id: PollenPetApp.companionWindowID) }
+            else { openWindow(id: App.companionWindowID) }
         }
         .keyboardShortcut("r", modifiers: .command)
         Divider()
         Button("Choose Character…") {
-            openWindow(id: PollenPetApp.companionWindowID)
+            openWindow(id: App.companionWindowID)
             characterPickerRequested = true
         }
         .keyboardShortcut("k", modifiers: .command)
     }
 }
+
+// MARK: - App Delegate
 
 @MainActor final class AppDelegate: NSObject, NSApplicationDelegate {
     private weak var companionWindow: NSWindow?
