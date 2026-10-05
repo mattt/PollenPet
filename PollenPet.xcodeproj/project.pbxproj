@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7A0100000000000000000011 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 7A0100000000000000000001 /* Fonts */; };
+		7A0100000000000000000012 /* Models in Resources */ = {isa = PBXBuildFile; fileRef = 7A0100000000000000000002 /* Models */; };
+		7A0100000000000000000013 /* Portraits in Resources */ = {isa = PBXBuildFile; fileRef = 7A0100000000000000000003 /* Portraits */; };
+		7A0100000000000000000014 /* ThirdParty in Resources */ = {isa = PBXBuildFile; fileRef = 7A0100000000000000000004 /* ThirdParty */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7A0500000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A0900000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0600000000000000000001;
+			remoteInfo = PollenPet;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7A0100000000000000000001 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		7A0100000000000000000002 /* Models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Models; sourceTree = "<group>"; };
+		7A0100000000000000000003 /* Portraits */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Portraits; sourceTree = "<group>"; };
+		7A0100000000000000000004 /* ThirdParty */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ThirdParty; sourceTree = "<group>"; };
+		7A0100000000000000000021 /* Pollen Pet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pollen Pet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A0100000000000000000022 /* PollenPetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PollenPetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7A0300000000000000000001 /* Exceptions for "App" folder in "PollenPet" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7A0600000000000000000001 /* PollenPet */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7A0200000000000000000001 /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7A0300000000000000000001 /* Exceptions for "App" folder in "PollenPet" target */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7A0200000000000000000002 /* Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7A0700000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A0700000000000000000012 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7A0400000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				7A0200000000000000000001 /* App */,
+				7A0400000000000000000002 /* Resources */,
+				7A0200000000000000000002 /* Tests */,
+				7A0100000000000000000004 /* ThirdParty */,
+				7A0400000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7A0400000000000000000002 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7A0100000000000000000001 /* Fonts */,
+				7A0100000000000000000002 /* Models */,
+				7A0100000000000000000003 /* Portraits */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7A0400000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7A0100000000000000000021 /* Pollen Pet.app */,
+				7A0100000000000000000022 /* PollenPetTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7A0600000000000000000001 /* PollenPet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A0B00000000000000000002 /* Build configuration list for PBXNativeTarget "PollenPet" */;
+			buildPhases = (
+				7A0700000000000000000001 /* Sources */,
+				7A0700000000000000000002 /* Frameworks */,
+				7A0700000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7A0200000000000000000001 /* App */,
+			);
+			name = PollenPet;
+			productName = PollenPet;
+			productReference = 7A0100000000000000000021 /* Pollen Pet.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7A0600000000000000000002 /* PollenPetTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A0B00000000000000000003 /* Build configuration list for PBXNativeTarget "PollenPetTests" */;
+			buildPhases = (
+				7A0700000000000000000011 /* Sources */,
+				7A0700000000000000000012 /* Frameworks */,
+				7A0700000000000000000013 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A0800000000000000000001 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7A0200000000000000000002 /* Tests */,
+			);
+			name = PollenPetTests;
+			productName = PollenPetTests;
+			productReference = 7A0100000000000000000022 /* PollenPetTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7A0900000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					7A0600000000000000000001 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					7A0600000000000000000002 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 7A0600000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = 7A0B00000000000000000001 /* Build configuration list for PBXProject "PollenPet" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7A0400000000000000000001;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7A0400000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7A0600000000000000000001 /* PollenPet */,
+				7A0600000000000000000002 /* PollenPetTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7A0700000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A0100000000000000000011 /* Fonts in Resources */,
+				7A0100000000000000000012 /* Models in Resources */,
+				7A0100000000000000000013 /* Portraits in Resources */,
+				7A0100000000000000000014 /* ThirdParty in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A0700000000000000000013 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7A0700000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A0700000000000000000011 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7A0800000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0600000000000000000001 /* PollenPet */;
+			targetProxy = 7A0500000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7A0A00000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		7A0A00000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		7A0A00000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pollen Pet";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Robot models by Pollen Robotics and Clément Plays. See bundled credits.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.dododo.PollenPet;
+				PRODUCT_MODULE_NAME = PollenPet;
+				PRODUCT_NAME = "Pollen Pet";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		7A0A00000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pollen Pet";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Robot models by Pollen Robotics and Clément Plays. See bundled credits.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.dododo.PollenPet;
+				PRODUCT_MODULE_NAME = PollenPet;
+				PRODUCT_NAME = "Pollen Pet";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		7A0A00000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/../Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.dododo.PollenPetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pollen Pet.app/Contents/MacOS/Pollen Pet";
+			};
+			name = Debug;
+		};
+		7A0A00000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/../Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.dododo.PollenPetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pollen Pet.app/Contents/MacOS/Pollen Pet";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7A0B00000000000000000001 /* Build configuration list for PBXProject "PollenPet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A0A00000000000000000001 /* Debug */,
+				7A0A00000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A0B00000000000000000002 /* Build configuration list for PBXNativeTarget "PollenPet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A0A00000000000000000003 /* Debug */,
+				7A0A00000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A0B00000000000000000003 /* Build configuration list for PBXNativeTarget "PollenPetTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A0A00000000000000000005 /* Debug */,
+				7A0A00000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7A0900000000000000000001 /* Project object */;
+}
