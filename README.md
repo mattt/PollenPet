@@ -7,9 +7,7 @@ from [Pollen Robotics](https://pollen-robotics.com),
 and chat through short conversations
 with synchronized speech, text, and motion.
 
-<p align="center">
-  <img src="Assets/screenshot.png" width="720" alt="Microduck on the desktop, asking &quot;Is this a good place for a duck?&quot; with two replies to choose from">
-</p>
+https://github.com/user-attachments/assets/51a6a64f-f91c-4059-a8f2-735e29fcc116
 
 > [!NOTE]
 > Pollen Pet is an independent, noncommercial project.
