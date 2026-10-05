@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/51a6a64f-f91c-4059-a8f2-735e29fcc116
 
 > [!NOTE]
 > Pollen Pet is an independent, noncommercial project.
-> The Microduck and Reachy Mini models are licensed for noncommercial use only.
+> The Microduck model is licensed for noncommercial use only.
 
 ## Features
 
