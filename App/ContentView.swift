@@ -262,15 +262,15 @@ private struct DialogueAdvanceMarker: View {
                 .foregroundStyle(AppTheme.ink)
                 .offset(y: bobbing ? Self.bob(at: context.date.timeIntervalSince(bobStart)) : 0)
         }
-        .opacity(active ? 1 : 0.4)
+        .opacity(active ? 0.65 : 0.3)
         .accessibilityHidden(true)
         .onChange(of: bobbing) { _, bobbing in
             if bobbing { bobStart = .now }
         }
     }
 
-    /// Eases 3 points down and back once per second, starting at rest.
+    /// Eases 3 points down and back every 1.6 seconds, starting at rest.
     private static func bob(at time: TimeInterval) -> CGFloat {
-        (1 - cos(time * 2 * .pi)) * 1.5
+        (1 - cos(time * 2 * .pi / 1.6)) * 1.5
     }
 }
