@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/pollen-robotics/reachy_mini_blender",
+  "revision": "bfa02cfee9fde8a1bcca7159921110b1a4a2368e",
+  "sourceSHA256": "7f8201f06d13ff8ffabfed5d27d486a1b040fffbdb34806313c75682db53fcca",
+  "outputSHA256": "7ef15f88efbc6f8d770740c5b7f292072ada0fc665ed5fbc3395b43392bb2323",
+  "license": "Apache-2.0",
+  "author": "Cl\u00e9ment Plays for Pollen Robotics",
+  "changes": [
+    "Evaluated the visualization rig in its rest pose and exported its meshes to USDZ.",
+    "Grouped head meshes under a pivot at 0.41 m for local animation.",
+    "Changed coordinates from Blender Z-up, +Y-forward to Y-up, +Z-forward.",
+    "Replaced procedural material colors with the source viewport colors.",
+    "Omitted procedural textures and an unresolved decorative image reference."
+  ]
+}

@@ -1,0 +1,10 @@
+.DS_Store
+xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Import script downloads and source checkouts
+.cache/
+
+# Conductor workspace scratch files
+.context/
