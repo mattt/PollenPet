@@ -49,8 +49,8 @@ https://github.com/user-attachments/assets/51a6a64f-f91c-4059-a8f2-735e29fcc116
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/mattt/pollen-pets.git
-cd pollen-pets
+git clone https://github.com/mattt/PollenPet.git
+cd PollenPet
 ```
 
 2. **Open in Xcode**
