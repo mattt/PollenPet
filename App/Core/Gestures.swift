@@ -35,56 +35,9 @@ struct GestureClip: Sendable {
 /// Small authored clips. The performance compiler places them on the same clock as text and audio.
 enum GestureLibrary {
     static func clip(_ gesture: PetGesture, for pet: PetID) -> GestureClip {
-        if gesture == .acknowledge { return acknowledgment(for: pet) }
         switch pet {
-        case .microduck:
-            let target: SIMD3<Double> = switch gesture {
-            case .welcome: [0.10, -0.16, 0.12]
-            case .surprise: [-0.20, 0, -0.08]
-            case .shy: [0.12, -0.18, -0.16]
-            case .nod: [0.18, 0, 0]
-            case .think: [-0.07, 0.20, 0.22]
-            case .present: [-0.04, -0.25, 0.08]
-            case .acknowledge: .zero
-            }
-            let duration = gesture == .nod ? 1.15 : 1.9
-            return GestureClip(duration: duration, keyframes: [
-                .init(0),
-                .init(duration * 0.3, target.x, target.y, target.z),
-                .init(duration * 0.6, target.x * 0.65, target.y * 0.8, target.z * 0.8),
-                .init(duration),
-            ])
-        case .reachyMini:
-            let target: SIMD3<Double> = switch gesture {
-            case .welcome: [-0.08, 0.24, -0.11]
-            case .surprise: [-0.20, 0, 0.04]
-            case .shy: [0.12, -0.16, 0.12]
-            case .nod: [0.17, 0, 0]
-            case .think: [-0.08, 0.20, 0.14]
-            case .present: [0.02, -0.24, -0.08]
-            case .acknowledge: .zero
-            }
-            let duration = gesture == .nod ? 1.0 : 1.7
-            return GestureClip(duration: duration, keyframes: [
-                .init(0),
-                .init(duration * 0.28, target.x, target.y, target.z),
-                .init(duration * 0.62, target.x * 0.7, target.y * 0.7, target.z * 0.7),
-                .init(duration),
-            ])
-        }
-    }
-
-    private static func acknowledgment(for pet: PetID) -> GestureClip {
-        let end = PerformanceCompiler.acknowledgmentDuration
-        return switch pet {
-        case .microduck:
-            GestureClip(duration: end, keyframes: [
-                .init(0), .init(end * 0.3, -0.04, 0, 0.05), .init(end * 0.65, 0.12), .init(end),
-            ])
-        case .reachyMini:
-            GestureClip(duration: end, keyframes: [
-                .init(0), .init(end * 0.35, 0.12, 0, -0.04), .init(end * 0.7, -0.05), .init(end),
-            ])
+        case .microduck: Microduck.clip(gesture)
+        case .reachyMini: ReachyMini.clip(gesture)
         }
     }
 }

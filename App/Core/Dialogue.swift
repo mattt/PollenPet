@@ -1,3 +1,28 @@
+enum SceneID: String, CaseIterable, Identifiable, Sendable {
+    case hello, discovery, tired, teasing, package
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .hello: "Say hello"
+        case .discovery: "A little discovery"
+        case .tired: "A long day"
+        case .teasing: "A little teasing"
+        case .package: "A mysterious package"
+        }
+    }
+}
+
+enum SceneLibrary {
+    static func scene(_ scene: SceneID, for pet: PetID) -> DialogueScene {
+        switch pet {
+        case .microduck: Microduck.scene(scene)
+        case .reachyMini: ReachyMini.scene(scene)
+        }
+    }
+}
+
 /// Motion applied to a span's letters as they appear.
 enum TextEffect: Sendable {
     case none, bounce
