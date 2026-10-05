@@ -7,6 +7,10 @@ from [Pollen Robotics](https://pollen-robotics.com),
 and chat through short conversations
 with synchronized speech, text, and motion.
 
+<p align="center">
+  <img src="Assets/screenshot.png" width="720" alt="Microduck on the desktop, asking &quot;Is this a good place for a duck?&quot; with two replies to choose from">
+</p>
+
 > [!NOTE]
 > Pollen Pet is an independent, noncommercial project.
 > The Microduck model is licensed for noncommercial use only.
@@ -117,6 +121,7 @@ and pass all other clicks through to the desktop.
 | -------------- | ----------------------------------------------------------------- |
 | `App/`         | SwiftUI interface, RealityKit stage, and window behavior          |
 | `App/Core/`    | Dialogue, performance compiler, voice, playback, and animators    |
+| `Assets/`      | Images for this README                                            |
 | `Resources/`   | Robot models, character portraits, and the heading font           |
 | `Scripts/`     | Scripts that convert the upstream robot models to USDZ            |
 | `Tests/`       | Swift Testing suites                                              |
