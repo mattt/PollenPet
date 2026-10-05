@@ -13,7 +13,7 @@ with synchronized speech, text, and motion.
 
 > [!NOTE]
 > Pollen Pet is an independent, noncommercial project.
-> The Microduck model is licensed for noncommercial use only.
+> The Microduck and Reachy Mini models are licensed for noncommercial use only.
 
 ## Features
 
