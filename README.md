@@ -119,7 +119,6 @@ and pass all other clicks through to the desktop.
 | -------------- | ----------------------------------------------------------------- |
 | `App/`         | SwiftUI interface, RealityKit stage, and window behavior          |
 | `App/Core/`    | Dialogue, performance compiler, voice, playback, and animators    |
-| `Assets/`      | Images for this README                                            |
 | `Resources/`   | Robot models, character portraits, and the heading font           |
 | `Scripts/`     | Scripts that convert the upstream robot models to USDZ            |
 | `Tests/`       | Swift Testing suites                                              |
