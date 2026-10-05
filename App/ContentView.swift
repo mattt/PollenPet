@@ -251,12 +251,26 @@ private struct SpeechLine: View {
 
 private struct DialogueAdvanceMarker: View {
     let active: Bool
+    @Environment(\.reducePetMotion) private var reducedMotion
+    @State private var bobStart = Date.now
 
     var body: some View {
-        Image(systemName: "arrow.down")
-            .font(.system(size: 19, weight: .bold))
-            .foregroundStyle(AppTheme.ink)
-            .opacity(active ? 1 : 0.4)
-            .accessibilityHidden(true)
+        let bobbing = active && !reducedMotion
+        TimelineView(.animation(paused: !bobbing)) { context in
+            Image(systemName: "arrow.down")
+                .font(.system(size: 19, weight: .bold))
+                .foregroundStyle(AppTheme.ink)
+                .offset(y: bobbing ? Self.bob(at: context.date.timeIntervalSince(bobStart)) : 0)
+        }
+        .opacity(active ? 1 : 0.4)
+        .accessibilityHidden(true)
+        .onChange(of: bobbing) { _, bobbing in
+            if bobbing { bobStart = .now }
+        }
+    }
+
+    /// Eases 3 points down and back once per second, starting at rest.
+    private static func bob(at time: TimeInterval) -> CGFloat {
+        (1 - cos(time * 2 * .pi)) * 1.5
     }
 }
