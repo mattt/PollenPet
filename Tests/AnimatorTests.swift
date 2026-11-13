@@ -13,6 +13,13 @@ struct MicroduckTests {
         return try await Entity(contentsOf: url)
     }
 
+    /// The one mesh entity from the source mesh `name`, whatever its index suffix.
+    private func mesh(_ name: String, in root: Entity) throws -> ModelEntity {
+        let meshes = MicroduckPart.meshes(named: name, in: root)
+        try #require(meshes.count == 1, "Expected one \(name) mesh, found \(meshes.count)")
+        return meshes[0]
+    }
+
     @Test func assemblyKeepsItsMaterialsAndServoHierarchy() async throws {
         let root = try await load()
         let animator = try MicroduckAnimator(root: root)
@@ -71,9 +78,9 @@ struct MicroduckTests {
         let root = try await load()
         let animator = try MicroduckAnimator(root: root)
         let mouth = try #require(root.findEntity(named: "mouth_hinge"))
-        let jaw = try #require(root.findEntity(named: "jaw_12"))
-        let pad = try #require(root.findEntity(named: "jaw_soft_3"))
-        let upper = try #require(root.findEntity(named: "soft_mouth_top_10"))
+        let jaw = try mesh("jaw", in: root)
+        let pad = try mesh("jaw_soft", in: root)
+        let upper = try mesh("soft_mouth_top", in: root)
         let head = try #require(root.findEntity(named: "head_roll"))
         #expect(jaw.parent === mouth)
         #expect(pad.parent === mouth)

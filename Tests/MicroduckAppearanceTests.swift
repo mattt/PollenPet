@@ -68,7 +68,7 @@ struct MicroduckAppearanceTests {
             let after = colors()
             for entity in entities where entity is ModelEntity {
                 let id = String(describing: ObjectIdentifier(entity))
-                if part.meshNames.contains(entity.name) { #expect(before[id] != after[id]) }
+                if part.meshNames.contains(MicroduckPart.meshName(of: entity)) { #expect(before[id] != after[id]) }
                 else { #expect(before[id] == after[id]) }
             }
             #expect(entities.map(\.transform) == transforms)

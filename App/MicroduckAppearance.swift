@@ -32,13 +32,31 @@ enum MicroduckPart: String, CaseIterable, Identifiable, Sendable {
     var id: Self { self }
     var title: String { rawValue.capitalized }
 
+    /// Source mesh names, without the index suffix that the converter adds.
     var meshNames: Set<String> {
         switch self {
-        case .head: ["top_head_shell_5", "bottom_head_shell_14"]
-        case .body: ["right_shell_1", "left_shell_10"]
-        case .beak: ["soft_mouth_top_10", "jaw_soft_3", "jaw_12"]
-        case .feet: ["foot_left_2", "foot_right_4"]
+        case .head: ["top_head_shell", "bottom_head_shell"]
+        case .body: ["right_shell", "left_shell"]
+        case .beak: ["soft_mouth_top", "jaw_soft", "jaw"]
+        case .feet: ["foot_left", "foot_right"]
         }
+    }
+
+    /// The converter names each mesh entity after its source mesh and its geom index
+    /// in the source body, such as `jaw_soft_6`.
+    /// An upstream re-export can change the index, so match on the source mesh name.
+    static func meshName(of entity: Entity) -> String {
+        entity.name.replacing(/_[0-9]+$/, with: "")
+    }
+
+    /// Every model entity under `root` whose source mesh is `meshName`.
+    static func meshes(named meshName: String, in root: Entity) -> [ModelEntity] {
+        func search(_ entity: Entity) -> [ModelEntity] {
+            let found = entity.children.flatMap(search)
+            guard let model = entity as? ModelEntity, Self.meshName(of: model) == meshName else { return found }
+            return [model] + found
+        }
+        return search(root)
     }
 }
 
@@ -124,13 +142,13 @@ struct MicroduckAppearance: Codable, Equatable, Sendable {
     init(root: Entity) throws {
         var parts: [MicroduckPart: [ModelEntity]] = [:]
         for part in MicroduckPart.allCases {
-            parts[part] = try part.meshNames.sorted().map { name in
-                guard let model = root.findEntity(named: name) as? ModelEntity,
-                      let materials = model.model?.materials, !materials.isEmpty,
-                      materials.allSatisfy({ $0 is PhysicallyBasedMaterial }) else {
-                    throw MaterialError.invalidMesh(name)
-                }
-                return model
+            parts[part] = try part.meshNames.sorted().flatMap { name in
+                let models = MicroduckPart.meshes(named: name, in: root)
+                guard !models.isEmpty, models.allSatisfy({ model in
+                    guard let materials = model.model?.materials, !materials.isEmpty else { return false }
+                    return materials.allSatisfy { $0 is PhysicallyBasedMaterial }
+                }) else { throw MaterialError.invalidMesh(name) }
+                return models
             }
         }
         self.parts = parts
