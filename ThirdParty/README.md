@@ -7,15 +7,29 @@ and the app makes no claim of affiliation.
 
 ## Microduck model
 
-Microduck's geometry and assembly are by
+Microduck's geometry and assembly are copyright
 [Pollen Robotics](https://pollen-robotics.com/microduck/), from
-[microduck_rl at revision 1e79c29](https://github.com/pollen-robotics/microduck_rl/tree/1e79c29c97d8b38aee9eefde77a545860ba7658e).
-The upstream README assigns hardware design files to Creative Commons BY-SA-NC
-and software to Apache 2.0.
-It does not state a Creative Commons license version.
-The software notice is in [microduck-LICENSE.txt](microduck-LICENSE.txt).
-The converted model remains subject to the hardware license,
-so commercial distribution requires permission for the model.
+[microduck_rl at revision 0daab16](https://github.com/pollen-robotics/microduck_rl/tree/0daab160d3fb1c2cbaba16a4a19052f36709dd9e)
+(November 10, 2026).
+The revision's `LICENSE-MODELS.md`, copied unchanged to
+[microduck-LICENSE-MODELS.md](microduck-LICENSE-MODELS.md),
+licenses the `.stl` meshes in `src/mjlab_microduck/robot/microduck/assets/`
+under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/),
+with the copyright held by Pollen Robotics.
+Everything else in the repository, including the MJCF robot descriptions,
+is under the Apache License 2.0.
+[microduck-LICENSE.txt](microduck-LICENSE.txt) is the revision's `LICENSE` file,
+the Apache License 2.0, unchanged.
+
+The converted model in `Resources/Models/microduck/` adapts those meshes,
+so this project licenses it under
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+Anyone who shares the model, or an adaptation of it,
+must credit Pollen Robotics with a link to
+[microduck_rl](https://github.com/pollen-robotics/microduck_rl),
+link to the license, say what changed,
+and license the adaptation under CC BY-NC-SA 4.0.
+Commercial use requires permission from Pollen Robotics.
 
 [microduck-sources.json](microduck-sources.json) records the pinned revision,
 source hashes, conversion changes, and output hash.

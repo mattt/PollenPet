@@ -76,7 +76,7 @@ private struct CreditsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("POLLEN PET").font(AppTypography.heading(24))
-            Text("Microduck model by Pollen Robotics, converted from microduck_rl. Hardware design files: Creative Commons BY-SA-NC (version not specified upstream). Noncommercial use only; no affiliation or endorsement. Conversion details and source hashes are in ThirdParty/microduck-sources.json.")
+            Text("Microduck model converted from microduck_rl. Its meshes are © Pollen Robotics under CC BY-NC-SA 4.0, and the converted model is under the same license. Noncommercial use only; no affiliation or endorsement. Conversion details and source hashes are in ThirdParty/microduck-sources.json.")
             Link("Microduck source and license notice", destination: URL(string: "https://github.com/pollen-robotics/microduck_rl")!)
             Text("Reachy Mini visualization model and rig by Clément Plays for Pollen Robotics. Converted from reachy_mini_blender under Apache 2.0. Conversion details and source hashes are in ThirdParty/reachy-mini-sources.json.")
             Link("Reachy Mini source and license notice", destination: URL(string: "https://github.com/pollen-robotics/reachy_mini_blender")!)

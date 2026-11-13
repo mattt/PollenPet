@@ -149,9 +149,14 @@ See the [LICENSE](LICENSE) file for more info.
 
 The bundled models and font keep their own licenses:
 
-- The Microduck model is by Pollen Robotics,
-  under Creative Commons BY-SA-NC,
+- The Microduck model is converted from meshes that are copyright Pollen Robotics
+  and licensed under
+  [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/),
   which does not permit commercial use.
+  The converted model is under the same license.
+  The rest of Pollen Robotics' Microduck repository,
+  including its robot descriptions,
+  is under the Apache License, Version 2.0.
 - The Reachy Mini model is by Clément Plays for Pollen Robotics,
   under the Apache License, Version 2.0.
 - The Anton font is by Vernon Adams,

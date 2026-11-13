@@ -1,8 +1,14 @@
 {
   "repository": "https://github.com/pollen-robotics/microduck_rl",
-  "revision": "1e79c29c97d8b38aee9eefde77a545860ba7658e",
-  "hardwareLicense": "Creative Commons BY-SA-NC (version not specified upstream)",
-  "softwareLicense": "Apache-2.0",
+  "revision": "0daab160d3fb1c2cbaba16a4a19052f36709dd9e",
+  "license": {
+    "models": "CC-BY-NC-SA-4.0",
+    "modelsScope": "src/mjlab_microduck/robot/microduck/assets/*.stl",
+    "modelsCopyright": "Pollen Robotics",
+    "everythingElse": "Apache-2.0",
+    "terms": "LICENSE-MODELS.md"
+  },
+  "adaptationLicense": "CC-BY-NC-SA-4.0",
   "changes": [
     "Converted visual STL meshes and MJCF body hierarchy to USDZ.",
     "Applied the upstream STAND pose and changed coordinates to Y-up.",
@@ -13,172 +19,176 @@
   "sources": [
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/ankle_left.stl",
-      "sha256": "98f14ba6e6cd138740aa822a615aaa0db34527d499c40b2379aacd13427a1379"
+      "sha256": "2ec1bd89205b407efebaa9a8898ad9fea741389d87b80ecc5c96b21d1668119e"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/ankle_right.stl",
-      "sha256": "836032fdeaa4b1f47f75cb24fa4ad9ebdb09acec158a0d787b3890c6dc4d4c6e"
+      "sha256": "f83f388ae00787415e76b8ecaab769f08f25b8c4e90c1937ff0fc4d68d81722e"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/banana_pcb_locker.stl",
-      "sha256": "a176364f824248b5156b37f2fd5c6b8bdfb24cd08be7ed6b3faa10b4db14a9cb"
+      "sha256": "42ddde9d01bf5d91f88b99847017f14d97d2537ee27383c6d41dd8bf30a51134"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/bearing_roll.stl",
-      "sha256": "2b30cbdb110c5cca7092a9b2658c9e899e294bf2df71635828858e1d1a20abfe"
+      "sha256": "b5603a64b2d965ad75ea847767b5798130852e12a658fde7b5068fc457e2adcc"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/bottom_head_shell.stl",
-      "sha256": "3ce9532854a712c93e00e0fd2bbc2ce6b1c45f9418fd29d6e82f6ad8af8fc1af"
+      "sha256": "1820f7cf96646b0fc0c431f07da87b91b13111bfa9857ab1bf2b1fc3388f8da2"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/elec_rpi_robot_hat_pcb.stl",
-      "sha256": "45b904bcb378161d274d313cd067d3967305db0bf22c0955530145e18cdd2cd8"
+      "sha256": "1a61582759d82b5b4df9b7d11099bf1bb3944fc77e6b74d3237adf24dd5d03d7"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/face_part.stl",
-      "sha256": "30eaa56fc38129ba16e2b4e247ac419b0ae9e5b0fe9e748697f4838d338b952e"
+      "sha256": "d0e89a173e7bdc8038c4d413f458140d8f42f1a2f098f67a887c2388eff31718"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/foot_left.stl",
-      "sha256": "5de2622a7b894e0fc9988dc6cff6579ee1dc818ffaddd0319f49cf5d5bd05587"
+      "sha256": "a1f5d43456d0f522bd60870153795f1e8112c1adf9b8b4373b59608d9545c044"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/foot_right.stl",
-      "sha256": "8ffa894b29578edc78f5e982a7d89a8f5e4fa1dc27232b88c22a8a0a74cfbaa7"
+      "sha256": "54f97fa1f0e0e611d31329df9f3c3b17ffcca2d695c579d1d32cbe99e8a6c7ef"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/hip_l.stl",
-      "sha256": "02bc777ce76a31b3d5c415188f8268b989f4eca57bc440a2900825ac459dec38"
+      "sha256": "e175896932d76dc7648cf939aa39cb7b1d188b783d91745adb9a4cec65e9052c"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/jaw.stl",
-      "sha256": "65c300349113d3c6cd4a2cc587f76f7228115565a854492e42358ba8df71796a"
+      "sha256": "45cdbd319a4583095d8daa0db07dee726522a743d59acb82d27d82ded500a1cf"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/jaw_soft.stl",
-      "sha256": "61a426890f748713d45a9c0844149bcb0340d326f75295dcf7de2a4d768cbc85"
+      "sha256": "2d2ade4e86df4b37ce313bb9b96023109dd04bab39dba08b154e76d332fbce2e"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/left_shell.stl",
-      "sha256": "efc16f55a4c32d21d74bf834faba27346788f154e29b40850cbcc69fda2f2396"
+      "sha256": "2abde8e2b79c9b011cdb11957c67ab4287b45d7301affd4235ab81141118e331"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/leg.stl",
-      "sha256": "b57d55ec2504dfb90b07bfc781dbf9b4bb6560becaf1dddbadd6a3914fdc423f"
+      "sha256": "9a91cc1ae31ecd9e0c1ba93f3bb2ad8a12e29bff24ec27d1ac66c0c3037d9fcf"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/lens.stl",
-      "sha256": "1549b2dad784d1a4c505c1ca62bffce6ca4e9b22c9273b37d6cda1c8bf2ca127"
+      "sha256": "b1c717432ff7666398de58adec6a1b7e03a7e45aa155dbfe27a6152ef19663e5"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/m12_lens_holder.stl",
-      "sha256": "7a9989bbe776ddd7a268013e63cdf0efc2fdae245ad2754a6b18d6bfbe21c2ed"
+      "sha256": "031d5ffaf6247328cf6d020f6b6695ffb3f8d3f22cf923b85811351d89ecfd7c"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/motor_support.stl",
-      "sha256": "5a741ee0dc71b349b8d6def4bffb826c4b9304c47cf0f00ffd1a3140b9205220"
+      "sha256": "ce0aa5bef82c7474512d302568c341b9769b3005e0bdb91a19c2eaaba6dad480"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/neck.stl",
-      "sha256": "ee5d4cbc51f64c43cd9c15f82709be93b5bd3f080013726d1d39c329c85050b9"
+      "sha256": "b6e86b886153be8a8a776c1cb219c074ee9e89c8bd431117662a2d9e504d7cb5"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/neck_pitch.stl",
-      "sha256": "b9aed695e03da3819d244ecc66f1ad2d3c5c435f759403bb9e0f3b9ca2876453"
+      "sha256": "a685ce65348ae4d0d49417c69a7a8871f8bbd54a6e3419362be9c334abd5d2ae"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/noenoeil.stl",
-      "sha256": "f5492d8291da053bb4cb3f6680f90507648c4cfe1ef59f92b7d8f53e980d279b"
+      "sha256": "e1167b3d5ad7fbbe6e63296bcd0c6b61556611e6bc1367b15ecfd27e3abb72f5"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/np_f970.stl",
-      "sha256": "979ca81251d4ec5862b6c987b46095aa07d0534ca1ec15f3cf438bbf7189deda"
+      "sha256": "0e55a48281331b3b7b1a363d2e93b6012f37c52045b6dc922a149ca7c1b38388"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/pcb__raspberry_pi_zero_2_w.stl",
-      "sha256": "0608b3cc7d15e479ae3a275c03096df44322ed06a8dbfc59fe790c46b3690753"
+      "sha256": "802cc66fc5447c67fc642d1339e55160df10f2ad04a65efd130e35fb7b2d3c90"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/power_support.stl",
-      "sha256": "cb43ba9351f51559f49ffc89679478288cfe6e9682b31898397406165b520cbe"
+      "sha256": "ee45e397d3f3422f34940a4b61156c3c11c7e8c2b240451ce5f9ddd1622a130e"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/right_shell.stl",
-      "sha256": "484779f2bbe856f212d96a152550bb6834fd3c69603da315b6f70d1a3766d120"
+      "sha256": "3efba3e193cc6aa49d49a9c92cdded0504917397c9e2c5b8fe002a958e2f2d2b"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/seeed_bearing__configuration__22x16x4.stl",
-      "sha256": "154412afeab1875acfc8bbd437f193f02c86cdd6a556395db10bb7126c545c6e"
+      "sha256": "295ee68ed9766c91fe06d3a2a49d39f7c2f56cc943395d293afdeb013123435e"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/seeed_bearing__configuration_default.stl",
-      "sha256": "4d0d4c174a167e5f783b52b212a14a5bbd8a3180988c744c299c330a6b3de448"
+      "sha256": "e815f3483a2e7b80844f3c0938a47e53db38b12faed9b2d364414c19e4322da4"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/soft_mouth_top.stl",
-      "sha256": "16f662c82bd3e24f0e64ee22b6b549b9a2a76f6de7b7477b9f89f5861f3e91a1"
+      "sha256": "3c2b52b0b6e2ce944a1e1b5a0838e1216be1ad3a34c8cdf91be186e634aec57b"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/sole_left.stl",
-      "sha256": "db35f3b231c075fe1f9cb5449e7a698fb8ea97362daf8432be3e9700c2067574"
+      "sha256": "e028c8b09fecd4cb354d042bf7fd95a1a1bc2d524d760d62137fa8d74093fc23"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/sole_right.stl",
-      "sha256": "a4f5c114aae7137d559cacfb71d77c981588850335de5a09a14f95a4192a218f"
+      "sha256": "3f5068872f3add10eb967327651445bdfca635f5a8a01befa0ef05e462b72b4c"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/speaker.stl",
-      "sha256": "694064a99dbecd48aea6122232ff1051b085e59ccbd4c53d8c32640105b4e826"
+      "sha256": "75a35f9bcf94cd8e52f99b3fd6ae667b48f52503f9075ee2f699eebe8e7b3ddf"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/top_head_shell.stl",
-      "sha256": "bc64288c0d54e13ec907256c2b99535937d370af1410de498905ec3cf8d7c3df"
+      "sha256": "6d01f396f514c9d2185cf6b8250b1d8382ac3fa0702eb525bcb284f706196291"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/trunk_base.stl",
-      "sha256": "fabfecefb73fbdc027e0fc8fc482a3857b86682a8dac0ca2ed88ae3011c01659"
+      "sha256": "aa4f853ae555a8b765e585ce4519c0bbff325ce298ec15a1437792c52a0beac1"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/upper_leg_left.stl",
-      "sha256": "b84e46d681cb971029e421c252de85e2f31e8858abee610dc26cd18037ef0224"
+      "sha256": "8cb1c12dfa6d366a318bb1ec16f585427b9a185afeb7738d0a6f41f5db46a07d"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/upper_leg_right.stl",
-      "sha256": "d6ed49dc77a539c65b9db1251f16b1e037f5ccf4334607e487dd624f9e12f59e"
+      "sha256": "5caf996cc3e151b01f393cdc6a6a6a940c1d86179d8b7c7f5f85cf1f1ac2fb63"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/upper_leg_rigidity_plate.stl",
-      "sha256": "41a4f826b5badfb75a1c0a6d26527c49761de88597d67c25ad731df2cdab7995"
+      "sha256": "231b3e5f1e24d146d735dc158cbcfec0c95a0d0ca8c500f61f04d15d0b665652"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/xl330.stl",
-      "sha256": "c9f6bf7dd9d8b307a4174b40ff12517b3ea470e5535319a5b7dcce4ba52cdfe1"
+      "sha256": "96238ed0d020ce0009cf1a5aa4b6926176c800840318ee65e4375be2298d2744"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/yaw2roll.stl",
-      "sha256": "56ce1110e43c2279c6580f79a2a8c9e3f91b3bf5cdf8cf00b1caa3cab127a6a7"
+      "sha256": "6c8f193ec7cb40be0f48eeb5fba81bce2c87f12e1aab3f77f1bc4981386e1495"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/assets/yaw_roll_motion.stl",
-      "sha256": "41149f07f2fb4f2c62b589b3e43c17bedbc57e17d2de5d4e22c4f4e4d3e73dc7"
+      "sha256": "b0c9902dee19f06cdb7fa930292e0e1c91e2dc59baa971211495b58ff76c3c60"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/robot_allcollisions.xml",
-      "sha256": "7a6fdf437f5a80c7348ad801f43f906b997a834389cb70cca5e1e8517ba38044"
+      "sha256": "ec9d2f731596cfc847a7fc3898ef8b5e67a548928abc23216537f1da8af2729c"
     },
     {
       "path": "src/mjlab_microduck/robot/microduck/scene.xml",
-      "sha256": "0d2f58227a3e1c4caae4e847a368ae83516d0f398f428c4e96737b67dd894ef1"
+      "sha256": "9a85461121ba8273083c482c166f27e143ca386993b3ec8f8d97eb09aa257d31"
     },
     {
       "path": "README.md",
-      "sha256": "cac2fb08c302f3b282d0f6acc4ca56f2a151be60becc20f08b84dc7913658259"
+      "sha256": "baca2fd269fd15a1b3a3e600bcedf5a9083f93a5ba1b6e0d53ad13d2c6a9ec37"
     },
     {
       "path": "LICENSE",
       "sha256": "2d3fd9ffffa70a4307498ec630b14a6b4731e010f8ddda92686eaf65733c2dfe"
+    },
+    {
+      "path": "LICENSE-MODELS.md",
+      "sha256": "51526767ce31785f88f318ede4870f4b0d466267c79ce6fb9009c682f798da30"
     }
   ],
-  "outputSHA256": "756043028d8ff610d7cbbf3c9d47bff92c0724edb7a7c96d6687a3187c3f9b39"
+  "outputSHA256": "2eba807894d1698a564b0513c84841c144e23360f95927c85fa8944c1be5efd9"
 }

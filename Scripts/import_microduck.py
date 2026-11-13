@@ -5,7 +5,8 @@
 """Convert the pinned Microduck MJCF/STL assembly to an articulated USDZ.
 
 Run with `uv run Scripts/import_microduck.py` from any directory.
-The hardware assets carry upstream's noncommercial license; see ThirdParty.
+Upstream licenses the STL meshes under CC BY-NC-SA 4.0, so the converted model
+is under the same license; see ThirdParty.
 """
 
 import hashlib
@@ -21,7 +22,7 @@ from pathlib import Path
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade, UsdUtils, Vt
 
 ROOT = Path(__file__).resolve().parents[1]
-REVISION = "1e79c29c97d8b38aee9eefde77a545860ba7658e"
+REVISION = "0daab160d3fb1c2cbaba16a4a19052f36709dd9e"
 BASE = f"https://raw.githubusercontent.com/pollen-robotics/microduck_rl/{REVISION}/"
 MODEL_PATH = "src/mjlab_microduck/robot/microduck/"
 CACHE = ROOT / ".cache/microduck-source" / REVISION
@@ -78,6 +79,7 @@ def main():
         MODEL_PATH + "scene.xml",
         "README.md",
         "LICENSE",
+        "LICENSE-MODELS.md",
     ]
     with ThreadPoolExecutor(max_workers=8) as executor:
         list(executor.map(fetch, files))
@@ -199,8 +201,14 @@ def main():
     manifest = {
         "repository": "https://github.com/pollen-robotics/microduck_rl",
         "revision": REVISION,
-        "hardwareLicense": "Creative Commons BY-SA-NC (version not specified upstream)",
-        "softwareLicense": "Apache-2.0",
+        "license": {
+            "models": "CC-BY-NC-SA-4.0",
+            "modelsScope": MODEL_PATH + "assets/*.stl",
+            "modelsCopyright": "Pollen Robotics",
+            "everythingElse": "Apache-2.0",
+            "terms": "LICENSE-MODELS.md",
+        },
+        "adaptationLicense": "CC-BY-NC-SA-4.0",
         "changes": [
             "Converted visual STL meshes and MJCF body hierarchy to USDZ.",
             "Applied the upstream STAND pose and changed coordinates to Y-up.",
@@ -224,6 +232,9 @@ def main():
     )
     (ROOT / "ThirdParty/microduck-LICENSE.txt").write_bytes(
         fetch("LICENSE").read_bytes()
+    )
+    (ROOT / "ThirdParty/microduck-LICENSE-MODELS.md").write_bytes(
+        fetch("LICENSE-MODELS.md").read_bytes()
     )
     print(f"Exported {OUTPUT / 'model.usdz'} ({len(joints)} articulated joints)")
 
