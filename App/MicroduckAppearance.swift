@@ -45,12 +45,12 @@ enum MicroduckPart: String, CaseIterable, Identifiable, Sendable {
     /// The converter names each mesh entity after its source mesh and its geom index
     /// in the source body, such as `jaw_soft_6`.
     /// An upstream re-export can change the index, so match on the source mesh name.
-    static func meshName(of entity: Entity) -> String {
+    @MainActor static func meshName(of entity: Entity) -> String {
         entity.name.replacing(/_[0-9]+$/, with: "")
     }
 
     /// Every model entity under `root` whose source mesh is `meshName`.
-    static func meshes(named meshName: String, in root: Entity) -> [ModelEntity] {
+    @MainActor static func meshes(named meshName: String, in root: Entity) -> [ModelEntity] {
         func search(_ entity: Entity) -> [ModelEntity] {
             let found = entity.children.flatMap(search)
             guard let model = entity as? ModelEntity, Self.meshName(of: model) == meshName else { return found }
